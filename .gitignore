@@ -1,0 +1,7 @@
+.build
+*.bak
+*.swp
+*.swo
+*.tdy
+*.tar.gz
+CPAN-Static-*
