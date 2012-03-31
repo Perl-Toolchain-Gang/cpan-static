@@ -22,7 +22,7 @@ This specification relies on a number of other specifications. This includes in 
 
 =head1 FLOW OF EXECUTION
 
-Building a distribution has four stages. They B<must> be performed in order, and any error in one stage B<must> abort the entire process, unless the user explicitly asks otherwise; the CPAN client B<may> try to fall back on dynamic install on error. Actions are build-time unless noted otherwise. Arguments that would have been passed to that stage for a dynamic install B<must> be handled by the CPAN client exactly as in CPAN::API::BuildPL. The stages are:
+Building a distribution has four stages. They B<must> be performed in order, and any error in one stage B<must> abort the entire process, unless the user explicitly asks otherwise; the CPAN client B<may> try to fall back on dynamic install on error. Actions are build-time unless noted otherwise. The order of different actions within the same phase is unspecified. Arguments that would have been passed to that stage for a dynamic install B<must> be handled by the CPAN client exactly as in CPAN::API::BuildPL. The stages are:
 
 =over 4
 
@@ -44,7 +44,7 @@ Static install may only be used by modules that have set the C<dynamic_config> i
 
 For a CPAN client to use static install, it B<must> be able to satisfy all requirements in the C<x_static_install> in the Meta file. The value of this key is a prereq key as described in C<CPAN::Meta::Spec>, except that it uses features instead of modules for subkeys.
 
-The following features are defined in this specification. New features may be defined outside of this spec. The features described may be updated by a new version of this spec. All features should be assumed to be compile-time, unless noted otherwise.
+The following features are defined in this specification. New features may be defined outside of this spec. The features described may be updated by a new version of this spec.
 
 =over 4
 
