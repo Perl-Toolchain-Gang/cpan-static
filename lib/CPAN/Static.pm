@@ -38,19 +38,19 @@ Building a distribution has four stages. They B<must> be performed in order, and
 
 =head1 EXTERNAL REQUIREMENTS
 
-Static install B<must not> be used by modules unless they have set the C<dynamic_config> in their meta file to C<0>. As static install intends to be an optimization, a valid F<Build.PL> (per CPAN::API::BuildPL) or F<Makefile.PL> B<must> be present.
+As static install intends to be an optimization, a valid F<Build.PL> (per CPAN::API::BuildPL) or F<Makefile.PL> B<must> be present as a fallback.
 
 =head1 FEATURES
 
 For a CPAN client to use static install, it B<must> be able to satisfy all requirements in the C<x_static_install> in the Meta file. The value of this key is a prereq key as described in C<CPAN::Meta::Spec>, except that it uses features instead of modules for subkeys.
 
-The following features are defined in this specification. New features can be defined outside of this spec. The features described here can be updated by a new version of this spec.
+The following features are defined in this specification. New features can be defined outside of this spec. The features described here can be updated by a new version of this spec. Any appropriate install location refers to CPAN::API::BuildPL.
 
 =over 4
 
 =item * configure
 
-Version 1 of this feature requires the cpan client to be able to configure a distribution. The F<META.json> file B<must> be copied verbatim to F<MYMETA.json>. It B<may> likewise copy F<META.yml> to F<MYMETA.yml>. This action B<must> be done during configure-time.
+Version 1 of this feature requires the cpan client to be able to configure a distribution. A valid F<MYMETA.json> (with the C<dynamic_config> key set to C<0>) B<must> be generated. It B<may> be copied verbatim to from F<META.json>. The same may be done for F<MYMETA.yml>/F<META.yml>. This action B<must> be done during configure-time.
 
 =item * pm
 
