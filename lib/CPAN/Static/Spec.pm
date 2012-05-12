@@ -14,7 +14,7 @@ This document describes a way for CPAN clients to install distributions without 
 
 =head1 PURPOSE
 
-Historically, Perl distributions have always been able to build, test and install without any help of a CPAN client. This is a powerful feature, but it is overly complicated for many modules that have no non-standard needs.
+Historically, Perl distributions have always been able to build, test and install without any help of a CPAN client. C<perl Makefile.PL><, C<make>, C<make test>, C<make install>. This is a powerful feature, but it is overly complicated for many modules that have no non-standard needs.
 
 =head1 CONTEXT
 
