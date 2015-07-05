@@ -18,65 +18,51 @@ Historically, Perl distributions have always been able to build, test and instal
 
 =head1 CONTEXT
 
-This specification relies on a number of other specifications. This includes in particular L<CPAN::Meta::Spec>, L<CPAN::API::BuildPL>.  The terms B<must>, B<should>, B<may> and their negations have the usual IETF semantics L<RFC2119|https://www.ietf.org/rfc/rfc2119.txt>.
-
-=head1 FLOW OF EXECUTION
-
-Building a distribution has four stages. They B<must> be performed in order, and any error in one stage B<must> abort the entire process, unless the user explicitly asks otherwise; the CPAN client B<may> try to fall back on dynamic install on error. Actions  B<must> be done during build-time unless noted otherwise. The order of different actions within the same phase is unspecified. Arguments that would be passed to a stage for a dynamic install B<must> be handled by the CPAN client exactly as in CPAN::API::BuildPL. The stages are:
-
-=over 4
-
-=item * configure
-
-=item * build
-
-=item * test
-
-=item * install
-
-=back
+This specification relies on a number of other specifications. This includes in particular on the L<CPAN Meta spec|CPAN::Meta::Spec>, L<Build.PL Spec|CPAN::API::BuildPL>. The terms B<must>, B<should>, B<may> and their negations have the usual IETF semantics L<RFC2119|https://www.ietf.org/rfc/rfc2119.txt>.
 
 =head1 EXTERNAL REQUIREMENTS
 
-As static install intends to be an optimization, a valid F<Build.PL> (per CPAN::API::BuildPL) or F<Makefile.PL> B<must> be present as a fallback.
+As static install intends to be an optimization, a valid F<Build.PL> (per CPAN::API::BuildPL) or F<Makefile.PL> B<must> be present as a fallback. It B<may> be copied verbatim to from F<META.json>. The same may be done for F<MYMETA.yml>/F<META.yml>. This action B<must> be done during configure-time.
 
-=head1 FEATURES
+=head1 FLOW OF EXECUTION
 
-For a CPAN client to use static install, it B<must> be able to satisfy all requirements in the C<x_static_install> in the Meta file. The value of this key is a prereq hash as described in C<CPAN::Meta::Spec>, except that it uses features instead of modules for subkeys.
+Building a distribution has four stages. They B<must> be performed in order, and any error in one stage B<must> abort the entire process, unless the user explicitly asks otherwise; the CPAN client B<may> try to fall back on dynamic install on error. Actions  B<must> be done during build-time unless noted otherwise. The order of different actions within the same phase is unspecified. Arguments that would be passed to a stage for a dynamic install B<must> be handled by the CPAN client exactly as in CPAN::API::BuildPL.
 
-The following features are defined in this specification. New features can be defined outside of this spec. The features described here can be updated by a new version of this spec. Any I<appropriate install location> refers to CPAN::API::BuildPL's install location section.
+=head2 Configuration
+
+The cpan client b<must> be able to configure a distribution. A valid F<MYMETA.json> (with the C<dynamic_config> key set to C<0>) B<must> be generated. 
+
+=head2 Building
+
+Various actions must or may be performed during the building stage.
 
 =over 4
 
-=item * configure
+=item * module files
 
-Version 1 of this feature requires the cpan client to be able to configure a distribution. A valid F<MYMETA.json> (with the C<dynamic_config> key set to C<0>) B<must> be generated. It B<may> be copied verbatim to from F<META.json>. The same may be done for F<MYMETA.yml>/F<META.yml>. This action B<must> be done during configure-time.
+The cpan client B<must> be able to build and install modules. It B<must> look recursively in F<lib/> for all F<*.pm> and F<*.pod> files and copy these to the appropriate location for C<lib> files during install. If applicable, these modules B<should> be autosplit and their permissions B<should> be set appropriately for that platform.
 
-=item * pm
+=item * script files
 
-Version 1 of this feature requires the cpan client to be able to build and install modules. It B<must> look recursively in F<lib/> for all F<*.pm> and F<*.pod> files and copy these to the appropriate location C<lib> files during install. If applicable, these modules B<should> be autosplit and their permissions B<should> be set appropriately for that platform.
+The cpan client B<must> be able to build and install scripts. It B<must> look non-recursively in F<script/> for all files and install these to the appropriate location for C<script> files during intstall. Their permissions B<must> be set appropriately for that platform for an executable and if necessary on that platform helpers B<must> be added.
 
-=item * script
+=item * documentation
 
-Version 1 of this feature requires the cpan client to be able to build and install scripts. It B<must> look non-recursively in F<script/> for all files and install these to the appropriate location for C<script> files during intstall. Their permissions B<must> be set appropriately for that platform for an executable and if necessary on that platform helpers B<must> be added.
+The cpan client b<must> be able to build and install platform appropriate documentation for modules and scripts from POD unless configured otherwise. The modules and scripts B<must> be found as described in the C<pm> and C<script> features. If generating man pages, they B<must> be put in appropriate location for C<libdoc> and C<bindoc>. If generating HTML documentation, they B<must> be put in the location for C<libhtml> and C<binhtml>.
 
-=item * doc
+=item * sharedir
 
-Version 1 of this feature requires the cpan client to be able to build and install platform appropriate documentation for modules and scripts from POD. The modules and scripts B<must> be found as described in the C<pm> and C<script> features. If generating man pages, they B<must> be put in appropriate location for C<libdoc> and C<bindoc>. If generating HTML documentation, they B<must> be put in the location for C<libhtml> and C<binhtml>.
-
-=item * share
-
-Version 1 of this feature requires the cpan client to be able to build and install a sharedir. The cpan client B<must> install the content of F<share/> to F<auto/share/dist/$distribution_name/> subdirectory of the appropriate directory for C<lib> files, where C<$distribution_name> is defined by the C<name> field in the META file.
-
-=item * test 
-
-Version 1 of this feature requires the cpan client to be able to build and install modules. Unless the user has explicitly asked this step to be skipped, it B<must> look recursively in F<t/> for all F<*.t> files and run them through a TAP harness. A failure of any of the tests B<must> be considered a fatal error. This action B<must> be done during test-time.
-
-=item * install
-
-Version 1 of this feature requires the cpan client to be able to install the contents of F<blib/>. The files and the generated metadata B<must> be installed as described in C<CPAN::API::BuildPL> 1.0. This action B<must> be done during install-time.
+Thee cpan client b<must> be able to build and install a distribution sharedir. The cpan client B<must> install the content of F<share/> to F<auto/share/dist/$distribution_name/> subdirectory of the appropriate directory for C<lib> files, where C<$distribution_name> is defined by the C<name> field in the META file.
 
 =back
 
-All CPAN clients implementing static install B<must> support version 1 of C<pm>, C<script>, C<test> and C<install>. They B<should> support version 1 of C<doc> and C<share>.
+=head2 test
+
+The cpan client B<must> be able to test modules. Unless the user has explicitly asked this step to be skipped, it B<must> look recursively in F<t/> for all F<*.t> files and run them through a TAP harness. A failure of any of the tests B<must> be considered a fatal error.
+
+=head2 install
+
+The cpan client B<must> be able to install the contents of F<blib/>. The files and the generated metadata B<must> be installed as described in C<CPAN::API::BuildPL> 1.0.
+
+=back
 
