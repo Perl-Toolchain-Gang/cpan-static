@@ -82,7 +82,7 @@ B<must> be added.
 The cpan client B<must> be able to build and install platform
 appropriate documentation for modules and scripts from POD unless
 configured otherwise. The modules and scripts B<must> be found as
-described in the C<pm> and C<script> features. If generating man
+described for C<module files> and C<script files>. If generating man
 pages, they B<must> be put in appropriate location for C<libdoc> and
 C<bindoc>. If generating HTML documentation, they B<must> be put in
 the location for C<libhtml> and C<binhtml>.
