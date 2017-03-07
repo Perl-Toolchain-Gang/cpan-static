@@ -65,8 +65,8 @@ Various actions must or may be performed during the building stage.
 The cpan client B<must> be able to build and install modules. It
 B<must> look recursively in F<lib/> for all F<*.pm> and F<*.pod> files
 and copy these to the appropriate location for C<lib> files during
-install. If applicable, these modules B<should> be autosplit and their
-permissions B<should> be set appropriately for that platform.
+install. Their permissions B<should> be set appropriately for that
+platform.
 
 =item * script files
 
