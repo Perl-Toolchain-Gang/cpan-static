@@ -16,7 +16,7 @@ distributions without having to run a F<Makefile.PL> or a F<Build.PL>
 =head1 PURPOSE
 
 Historically, Perl distributions have always been able to build, test
-and install without any help of a CPAN client. C<perl Makefile.PL><,
+and install without any help of a CPAN client. C<perl Makefile.PL>,
 C<make>, C<make test>, C<make install>. This is a powerful feature,
 but it is overly complicated for many modules that have no
 non-standard needs.
@@ -79,17 +79,17 @@ B<must> be added.
 
 =item * documentation
 
-The cpan client b<must> be able to build and install platform
+The cpan client B<must> be able to build and install platform
 appropriate documentation for modules and scripts from POD unless
 configured otherwise. The modules and scripts B<must> be found as
-described in the C<pm> and C<script> features. If generating man
+described for C<module files> and C<script files>. If generating man
 pages, they B<must> be put in appropriate location for C<libdoc> and
 C<bindoc>. If generating HTML documentation, they B<must> be put in
 the location for C<libhtml> and C<binhtml>.
 
 =item * sharedir
 
-Thee cpan client b<must> be able to build and install a distribution
+Thee cpan client B<must> be able to build and install a distribution
 sharedir. The cpan client B<must> install the content of F<share/> to
 F<auto/share/dist/$distribution_name/> subdirectory of the appropriate
 directory for C<lib> files, where C<$distribution_name> is defined by
@@ -109,6 +109,3 @@ failure of any of the tests B<must> be considered a fatal error.
 The cpan client B<must> be able to install the contents of
 F<blib/>. The files and the generated metadata B<must> be installed as
 described in C<CPAN::API::BuildPL> 1.0.
-
-=back
-
