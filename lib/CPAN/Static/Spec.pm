@@ -1,4 +1,4 @@
-package CPAN::Static;
+package CPAN::Static::Spec;
 use strict;
 use warnings;
 
