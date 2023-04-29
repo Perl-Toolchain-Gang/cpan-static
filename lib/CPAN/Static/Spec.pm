@@ -29,7 +29,7 @@ L<Build.PL Spec|CPAN::API::BuildPL>. The terms B<must>, B<should>,
 B<may> and their negations have the usual IETF semantics
 L<RFC2119|https://www.ietf.org/rfc/rfc2119.txt>.
 
-=head1 EXTERNAL REQUIREMENTS
+=head1 AUTHOR TOOL REQUIREMENTS
 
 As static install intends to be an optimization, a valid F<Build.PL>
 (per CPAN::API::BuildPL) or F<Makefile.PL> B<must> be present as a
