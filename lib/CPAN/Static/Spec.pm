@@ -35,6 +35,13 @@ As static install intends to be an optimization, a valid F<Build.PL>
 (per CPAN::API::BuildPL) or F<Makefile.PL> B<must> be present as a
 fallback.
 
+=head1 META REQUIREMENTS
+
+The author tool will add an C<x_static_install> entry to the C<META>.
+This entry will contain the version of the C<CPAN::Static::Spec> that
+it expects the install tool to perform. The install tool C<must not>
+perform a static install if it doesn't support the specified version.
+
 =head1 FLOW OF EXECUTION
 
 Building a distribution has four stages. They B<must> be performed in
