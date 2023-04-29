@@ -33,9 +33,7 @@ L<RFC2119|https://www.ietf.org/rfc/rfc2119.txt>.
 
 As static install intends to be an optimization, a valid F<Build.PL>
 (per CPAN::API::BuildPL) or F<Makefile.PL> B<must> be present as a
-fallback. It B<may> be copied verbatim to from F<META.json>. The same
-may be done for F<MYMETA.yml>/F<META.yml>. This action B<must> be done
-during configure-time.
+fallback.
 
 =head1 FLOW OF EXECUTION
 
@@ -52,7 +50,10 @@ client exactly as in CPAN::API::BuildPL.
 
 The cpan client b<must> be able to configure a distribution. A valid
 F<MYMETA.json> (with the C<dynamic_config> key set to C<0>) B<must> be
-generated.
+generated, it B<may> be copied verbatim to from F<META.json>. The same
+may be done for F<MYMETA.yml>/F<META.yml>. This action B<must> be done
+during configure-time.
+
 
 =head2 Building
 
