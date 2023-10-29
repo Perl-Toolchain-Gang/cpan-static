@@ -63,6 +63,3 @@ The cpan client B<must> be able to test modules. Unless the user has explicitly 
 =head2 install
 
 The cpan client B<must> be able to install the contents of F<blib/>. The files and the generated metadata B<must> be installed as described in C<CPAN::API::BuildPL> 1.0.
-
-=back
-
