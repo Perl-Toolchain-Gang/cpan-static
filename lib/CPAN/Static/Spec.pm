@@ -1,4 +1,5 @@
 package CPAN::Static::Spec;
+
 use strict;
 use warnings;
 
@@ -9,6 +10,8 @@ use warnings;
 __END__
 
 =head1 DESCRIPTION
+
+*THIS DOCUMENT IS STILL A DRAFT*
 
 This document describes a way for CPAN clients to install distributions without having to run a F<Makefile.PL> or a F<Build.PL> 
 
