@@ -159,13 +159,64 @@ sub install {
 
 1;
 
+# ABSTRACT: static CPAN installation reference implementation
+
 =head1 DESCRIPTION
 
-=func configure
+This module provides a reference
 
-=func build
+=func configure(%options)
 
-=func test
+This function takes the following options, whose semantics are described in detail in L<CPAN::API::BuildPL|CPAN::API::BuildPL>.
 
-=func install
+=over 4
 
+=item * destdir
+
+A string containing the destination directory
+
+=item * installdirs
+
+The type of installdirs, one of C<'site'>, C<'vendor'> or C<'core'>.
+
+=item * install_base
+
+The path to the install base.
+
+=item * install_path
+
+A hash describing the install path for different target types.
+
+=item * uninst
+
+A boolean value enabling uninstalling older versions.
+
+=item * verbose
+
+The verbosity of the actions.
+
+=item * config
+
+C<%Config> entries to be override. This should either be a hash of overrides, or an L<ExtUtils::Config|ExtUtils::Config> object.
+
+=item * jobs
+
+Suggest a certain number of jobs to be run in parallel.
+
+=back
+
+=func build()
+
+This will build the dist.
+
+=func test()
+
+This will run the tests for the distribution.
+
+=func install()
+
+This will install the dist.
+
+=func opts_from_args_list
+
+This turns a list of arguments into a C<%options> hash for configure, the same way a Build.PL implementation would.
