@@ -1,0 +1,59 @@
+#! perl
+
+use strict;
+use warnings;
+
+use CPAN::Static::Install ':all';
+
+sub all {
+	configure(@_);
+	build;
+	test;
+	install;
+}
+
+my %dispatch = (
+	configure => \&configure,
+	build     => \&build,
+	test      => \&test,
+	install   => \&install,
+	all       => \&all,
+);
+
+my $command    = shift @ARGV;
+my $dispatcher = $dispatch{$command} or die "No such subcommand $command\n";
+my %opts       = opts_from_args_list(@ARGV);
+
+$dispatcher->(%opts);
+
+# PODNAME: cpan-static
+# ABSTRACT: a small command line tool for static installation.
+
+=head1 SYNOPSIS
+
+$ cpan-static configure --install_base ~/my_app
+$ cpan-static build
+$ cpan-static test
+$ cpan-static install
+
+=head1 DESCRIPTION
+
+This is a small tool to facilitate static installation of CPAN modules.
+
+All subcommands take the same arguments as a Build.PL would, but it's recommended to only pass them to configure.
+
+=head2 configure
+
+This will configure the distribution. This should be run first.
+
+=head2 build
+
+This will build all files in the staging directory. One must first call C<configure> before calling this. Note that you should have any build, test and runtime dependencies installed before this action.
+
+=head2 test
+
+This will run the test for the distribution. One must first call C<build> before calling this.
+
+=head2 install
+
+This will install the distribution. One must first call C<build> before calling this, one may also call C<test> before running this.
