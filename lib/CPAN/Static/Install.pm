@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Exporter 5.57 'import';
-our @EXPORT_OK = qw/configure build test install/;
+our @EXPORT_OK = qw/configure build test install opts_from_args_list/;
 our %EXPORT_TAGS = (
 	'all' => \@EXPORT_OK,
 );
@@ -33,13 +33,27 @@ sub read_file {
 	return do { local $/; <$fh> };
 }
 
+my @getopt_flags = qw/install_base=s install_path=s% installdirs=s destdir=s prefix=s config=s%
+                      uninst:1 verbose:1 dry_run:1 pureperl-only:1 create_packlist=i jobs=i/;
+
+sub opts_from_args_list {
+	my (@args) = @_;
+	GetOptionsFromArray(\@args, \my %result, @getopt_flags);
+	return %result;
+}
+
+sub opts_from_args_string {
+	my $arg = shift;
+	my @args = defined $arg ? split_like_shell($arg) : ();
+	return opts_from_args_list(@args);
+}
+
 sub configure {
 	my %args = @_;
     $args{config} = $args{config}->values_set if blessed($args{config});
 	my $meta = CPAN::Meta->load_file('META.json');
+	my %env = opts_from_args_string($ENV{PERL_MB_OPT});
 	printf "Saving configuration for '%s' version '%s'\n", $meta->name, $meta->version;
-	my @env = defined $ENV{PERL_MB_OPT} ? split_like_shell($ENV{PERL_MB_OPT}) : ();
-	GetOptionsFromArray(\@env, \my %env, qw/install_base=s install_path=s% installdirs=s destdir=s prefix=s config=s% uninst:1 verbose:1 dry_run:1 pureperl-only:1 create_packlist=i jobs=i/);
 	write_file('_static_build_params', encode_json([ \%env, \%args ]));
 	$meta->save('MYMETA.json');
 }
@@ -57,9 +71,9 @@ sub manify {
 
 sub find {
 	my ($pattern, $dir) = @_;
-	my @ret;
-	File::Find::find(sub { push @ret, $File::Find::name if /$pattern/ && -f }, $dir) if -d $dir;
-	return @ret;
+	my @result;
+	File::Find::find(sub { push @result, $File::Find::name if /$pattern/ && -f }, $dir) if -d $dir;
+	return @result;
 }
 
 sub contains_pod {
@@ -68,9 +82,21 @@ sub contains_pod {
 	return read_file($file) =~ /^\=(?:head|pod|item)/m;
 }
 
+sub hash_merge {
+	my ($left, @others) = @_;
+	my %result = %{$left};
+	for my $right (@others) {
+		for my $key (keys %$right) {
+			$result{$key} = ref($right->{$key}) eq 'HASH' ? hash_merge($result{key}, $right->{key}) : $right->{$key};
+		}
+	}
+	return %result;
+}
+
 sub get_opts {
+	my %extra_opts = @_;
 	my ($env, $bargv) = @{ decode_json(read_file('_static_build_params')) };
-	my %options = (%$env, %$bargv);
+	my %options = hash_merge($env, $bargv, \%extra_opts);
 	$_ = detildefy($_) for grep { defined } @options{qw/install_base destdir prefix/}, values %{ $options{install_path} };
 	$options{meta} = CPAN::Meta->load_file('MYMETA.json');
 	$options{config} = ExtUtils::Config->new($options{config});
@@ -79,7 +105,8 @@ sub get_opts {
 }
 
 sub build {
-	my %opt = get_opts;
+	my %extra_opts = @_;
+	my %opt = get_opts(%extra_opts);
 	my %modules = map { $_ => catfile('blib', $_) } find(qr/\.pm$/, 'lib');
 	my %docs    = map { $_ => catfile('blib', $_) } find(qr/\.pod$/, 'lib');
 	my %scripts = map { $_ => catfile('blib', $_) } find(qr/(?:)/, 'script');
@@ -109,7 +136,8 @@ sub build {
 }
 
 sub test {
-	my %opt = get_opts;
+	my %extra_opts = @_;
+	my %opt = get_opts(%extra_opts);
 	die "Must run `./Build build` first\n" if not -d 'blib';
 	require TAP::Harness::Env;
 	my %test_args = (
@@ -123,7 +151,8 @@ sub test {
 }
 
 sub install {
-	my %opt = get_opts;
+	my (%extra_opts) = @_;
+	my %opt = get_opts(%extra_opts);
 	die "Must run `./Build build` first\n" if not -d 'blib';
 	ExtUtils::Install::install($opt{install_paths}->install_map, @opt{qw/verbose dry_run uninst/});
 }
