@@ -2,6 +2,9 @@ Revision history for CPAN-Static
 
 {{$NEXT}}
 
+0.003     2023-11-07 18:05:51+01:00 Europe/Brussels
+          - Regenerate configure requirements
+
 0.002     2023-11-04 15:13:10+01:00 Europe/Brussels
           - Improve descriptions of specification
 
