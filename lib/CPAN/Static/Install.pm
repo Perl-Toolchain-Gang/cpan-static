@@ -171,9 +171,21 @@ sub install {
 
 # ABSTRACT: static CPAN installation reference implementation
 
+=head1 SYNOPSIS
+
+ if (my $static = supports_static_install) {
+     configure(static_version => $static);
+     ... install dependencies ...
+     build;
+     test;
+     install;
+ } else {
+     ...
+ }
+
 =head1 DESCRIPTION
 
-This module provides a reference
+This module provides a reference implementation of the L<CPAN::Static::Spec|static CPAN install spec>.
 
 =func supports_static_install($meta)
 
