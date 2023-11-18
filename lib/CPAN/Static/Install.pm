@@ -185,6 +185,10 @@ This function takes the following options, whose semantics are described in deta
 
 =over 4
 
+=item * static_version
+
+The version of the CPAN::Static spec to use, as returned by C<supports_static_install>.
+
 =item * destdir
 
 A string containing the destination directory

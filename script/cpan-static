@@ -24,6 +24,9 @@ my $command    = shift @ARGV;
 my $dispatcher = $dispatch{$command} or die "No such subcommand $command\n";
 my %opts       = opts_from_args_list(@ARGV);
 
+my $static_version = supports_static_install;
+$opts{static_version} = $static_version if defined $static_version;
+
 $dispatcher->(%opts);
 
 # PODNAME: cpan-static

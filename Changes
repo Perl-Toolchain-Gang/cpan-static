@@ -3,6 +3,7 @@ Revision history for CPAN-Static
 {{$NEXT}}
           - Mark Build script as executable
           - Add supports_static_install
+          - Add static_version argument
 
 0.003     2023-11-07 18:05:51+01:00 Europe/Brussels
           - Regenerate configure requirements

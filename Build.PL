@@ -8,11 +8,11 @@ use File::Basename 'basename';
 use File::Copy 'copy';
 
 use lib 'lib';
-use CPAN::Static::Install qw/configure build test install opts_from_args_list/;
+use CPAN::Static::Install ':all';
 
 my %opts = opts_from_args_list(@ARGV);
 if (basename($0) eq 'Build.PL') {
-	configure(%opts);
+	configure(%opts, static_version => supports_static_install);
 	copy('Build.PL', 'Build');
 	make_executable('Build');
 } else {
