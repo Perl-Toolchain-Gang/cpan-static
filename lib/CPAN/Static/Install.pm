@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Exporter 5.57 'import';
-our @EXPORT_OK = qw/configure build test install opts_from_args_list/;
+our @EXPORT_OK = qw/configure build test install supports_static_install opts_from_args_list/;
 our %EXPORT_TAGS = (
 	'all' => \@EXPORT_OK,
 );
@@ -46,6 +46,16 @@ sub opts_from_args_string {
 	my $arg = shift;
 	my @args = defined $arg ? split_like_shell($arg) : ();
 	return opts_from_args_list(@args);
+}
+
+sub supports_static_install {
+	my $meta = shift;
+	if (!$meta) {
+		return undef unless -f 'META.json';
+		$meta = CPAN::Meta->load_file('META.json');
+	}
+	my $static_version = $meta->custom('x_static_install') || 0;
+	return $static_version == 1 ? $static_version : undef;
 }
 
 sub configure {
@@ -164,6 +174,10 @@ sub install {
 =head1 DESCRIPTION
 
 This module provides a reference
+
+=func supports_static_install($meta)
+
+This returns returns the version of the CPAN::Static spec for this dist. It returns undef if no version is declared or if the declared version is not supported. C<$meta> is a L<CPAN::Meta|CPAN::Meta> object, if undefined it will be loaded from F<META.json>.
 
 =func configure(%options)
 
