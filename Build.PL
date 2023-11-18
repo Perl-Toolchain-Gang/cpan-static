@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 
+use ExtUtils::Helpers 'make_executable';
 use File::Basename 'basename';
 use File::Copy 'copy';
 
@@ -13,6 +14,7 @@ my %opts = opts_from_args_list(@ARGV);
 if (basename($0) eq 'Build.PL') {
 	configure(%opts);
 	copy('Build.PL', 'Build');
+	make_executable('Build');
 } else {
 	my $command = shift || 'build';
 	if ($command eq 'build') {
