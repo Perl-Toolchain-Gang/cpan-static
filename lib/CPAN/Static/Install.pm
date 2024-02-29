@@ -60,7 +60,8 @@ sub supports_static_install {
 
 sub configure {
 	my %args = @_;
-    $args{config} = $args{config}->values_set if blessed($args{config});
+	die "Unsupported static install version" if defined $args{static_version} and int $args{static_version} != 1;
+	$args{config} = $args{config}->values_set if blessed($args{config});
 	my $meta = CPAN::Meta->load_file('META.json');
 	my %env = opts_from_args_string($ENV{PERL_MB_OPT});
 	printf "Saving configuration for '%s' version '%s'\n", $meta->name, $meta->version;
@@ -173,7 +174,7 @@ sub install {
 
 =head1 SYNOPSIS
 
- if (my $static = supports_static_install) {
+ if (my $static = supports_static_install($meta)) {
      configure(static_version => $static);
      ... install dependencies ...
      build;
@@ -193,7 +194,7 @@ This returns returns the version of the CPAN::Static spec for this dist. It retu
 
 =func configure(%options)
 
-This function takes the following options, whose semantics are described in detail in L<CPAN::API::BuildPL|CPAN::API::BuildPL>.
+This function takes the following options, whose semantics are mostly described in detail in L<CPAN::API::BuildPL|CPAN::API::BuildPL>.
 
 =over 4
 
