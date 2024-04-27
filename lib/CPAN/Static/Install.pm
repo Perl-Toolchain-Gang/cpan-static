@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Exporter 5.57 'import';
-our @EXPORT_OK = qw/configure build test install supports_static_install opts_from_args_list/;
+our @EXPORT_OK = qw/configure build test install supports_static_install opts_from_args_list opts_from_args_string/;
 our %EXPORT_TAGS = (
 	'all' => \@EXPORT_OK,
 );
@@ -250,4 +250,9 @@ This will install the dist.
 
 =func opts_from_args_list
 
-This turns a list of arguments into a C<%options> hash for configure, the same way a Build.PL implementation would.
+This turns a list of arguments into a C<%options> hash for configure, the same way a Build.PL implementation would. It takes them as an array, e.g. C<( '--install_base', '~/foo')>.
+
+=func opts_from_args_string
+
+This turns a list of arguments into a C<%options> hash for configure, the same way a Build.PL implementation would. It takes them as an string, e.g. C<'--install_base ~/foo'>.
+

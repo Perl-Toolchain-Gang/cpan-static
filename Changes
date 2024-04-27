@@ -1,6 +1,7 @@
 Revision history for CPAN-Static
 
 {{$NEXT}}
+          - Export opts_from_args_string
 
 0.005     2024-02-29 23:58:24+01:00 Europe/Brussels
           - Check for static_version in configure
