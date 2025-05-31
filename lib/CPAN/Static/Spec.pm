@@ -58,7 +58,7 @@ client exactly as in CPAN::API::BuildPL.
 
 =head2 Configuration
 
-The cpan client b<must> be able to configure a distribution. A valid
+The cpan client B<must> be able to configure a distribution. A valid
 F<MYMETA.json> (with the C<dynamic_config> key set to C<0>) B<must> be
 generated, it B<may> be copied verbatim to from F<META.json>. The same
 may be done for F<MYMETA.yml>/F<META.yml>. This action B<must> be done
